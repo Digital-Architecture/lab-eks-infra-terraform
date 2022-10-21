@@ -6,3 +6,6 @@ variable region {
   default     = ""
   description = "description"
 }
+
+
+variable "tags" {}
