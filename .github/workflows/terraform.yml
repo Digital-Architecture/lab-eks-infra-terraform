@@ -1,0 +1,55 @@
+name: Terraform Test with localstack
+
+on:
+  push:
+    branchs:
+    - develop
+    branches-ignore:
+      - "main"
+
+jobs:
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+
+      - name: Run terraform validate
+        run: |
+          terraform init
+          terraform workspace new local
+          terraform workspace list
+          terraform validate
+
+  terraform-apply:
+    runs-on: ubuntu-latest
+    needs: terraform-validate
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+
+      - name: asdf_install
+        uses: asdf-vm/actions/install@v1
+      
+      - name: Start Localstack
+        run: |
+          python3 -m pip install localstack awscli pyOpenSSL cryptography
+          docker pull localstack/localstack
+          localstack start -d
+          echo "Waiting for LocalStack startup..."
+          localstack wait -t 60
+          docker ps -a 
+          echo "Startup Complete"
+      
+      - name: Run Terraform Plan
+        run: |
+          terraform init
+          terraform workspace new local
+          terraform workspace list
+          terraform plan --var-file="environments/local/variables.tfvars"
+      
+      - name: Run Terraform apply
+        run: |
+          terraform init
+          terraform apply --var-file="environments/local/variables.tfvars" -auto-approve
