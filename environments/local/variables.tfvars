@@ -1,6 +1,5 @@
 # NTTDATA - DIGITAL ARCHITECTURE
-# Create: Marcos Cianci - mlopesci@emeal.nttdata.com
-
+# Create: Marcos Cianci 
 
 tags = {
     Project         = "EKS"
