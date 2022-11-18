@@ -1,0 +1,32 @@
+name: Terraform Deploy
+
+on: [pull_request]
+  
+jobs:
+
+  Terraform-Deploy:
+    runs-on: ubuntu-latest
+    environment: 'Lab'
+    env:
+      stack: lab
+    steps:
+
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+      
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      - name: Terraform Init
+        run: | 
+          terraform init
+          terraform workspace new ${{ env.stack }}
+        continue-on-error: true
+
+      - name: Terraform Apply
+        run: terraform apply -var-file="environments/${{ env.stack }}/variables.tfvars" -auto-approve
+
