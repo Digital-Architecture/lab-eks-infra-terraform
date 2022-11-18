@@ -10,28 +10,28 @@ data "aws_vpc" "vpc-lab-eks" {
 ### AWS Subnet Private and AWS Subnet Public ###
 data "aws_subnet" "subnet-private-lab-1" {
   filter {
-    name = "tag:name"
+    name = "tag:Name"
     values = ["subnet-private-lab-1"]
   }
 }
 
 data "aws_subnet" "subnet-private-lab-2" {
   filter {
-    name = "tag:name"
+    name = "tag:Name"
     values = ["subnet-private-lab-2"]
   }
 }
 
 data "aws_subnet" "subnet-public-lab-1" {
   filter {
-    name = "tag:name"
+    name = "tag:Name"
     values = ["subnet-public-lab-1"]
   }
 }
 
 data "aws_subnet" "subnet-public-lab-2" {
   filter {
-    name = "tag:name"
+    name = "tag:Name"
     values = ["subnet-public-lab-2"]
   }
 }
