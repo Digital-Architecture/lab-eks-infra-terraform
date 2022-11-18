@@ -1,13 +1,10 @@
 # NTTDATA - DIGITAL ARCHITECTURE
-# Create: Marcos Cianci - mlopesci@emeal.nttdata.com
+# Create: Marcos Cianci 
 
 terraform {
-  
-  backend "local" {}
-
-  #backend "s3" {
-  #    bucket    = ""
-  #    key       = "terraform/*.tfstate"
-  #    region    = ""
-  #}
+  backend "s3" {
+      bucket    = "terraform-labs-digital-architecture"
+      key       = "terraform/lab-eks-infra.tfstate"
+      region    = "us-west-1"
+  }
 }
