@@ -2,10 +2,16 @@
 # Create: Marcos Cianci 
 
 variable region {
+  
+  description = "description"
   type        = string
   default     = ""
-  description = "description"
 }
 
+variable "environment" {
+
+  description = ""
+  type        = string
+}
 
 variable "tags" {}
