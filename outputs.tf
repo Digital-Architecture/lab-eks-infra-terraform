@@ -1,2 +1,10 @@
 # NTTDATA - DIGITAL ARCHITECTURE
-# Create: Marcos Cianci - mlopesci@emeal.nttdata.com
+# Create: Marcos Cianci 
+
+
+output "security_group_id" {
+
+    description = ""
+    value = module.sg_bastion_host.security_group_id
+  
+}

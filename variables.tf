@@ -1,8 +1,11 @@
 # NTTDATA - DIGITAL ARCHITECTURE
-# Create: Marcos Cianci - mlopesci@emeal.nttdata.com
+# Create: Marcos Cianci 
 
 variable region {
   type        = string
   default     = ""
   description = "description"
 }
+
+
+variable "tags" {}

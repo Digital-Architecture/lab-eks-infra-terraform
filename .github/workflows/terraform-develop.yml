@@ -1,0 +1,48 @@
+name: Terraform Develop
+
+on:
+  push:
+    branches:
+    - develop
+  
+jobs:
+
+  Terraform-Develop: 
+    runs-on: ubuntu-latest
+    env:
+      stack: lab
+    steps:
+
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      - name: Terraform Init
+        run: | 
+          terraform init
+          terraform workspace new ${{ env.stack }}
+        continue-on-error: true
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Validate Status
+        if: steps.validate.outcome == 'failure'
+        run: exit 1    
+        
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="environments/${{ env.stack }}/variables.tfvars" -no-color
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
