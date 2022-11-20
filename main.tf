@@ -29,6 +29,8 @@ module "ec2_bastion_host" {
     ]
 
     tags                = var.tags
+
+    depends_on = [ "module.sg_bastion_host" ]
 }
 
 
