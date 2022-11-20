@@ -2,11 +2,11 @@
 # Create: Marcos Cianci 
 
 
-
 tags = {
-    Project         = "EKS"
-    Stack           = "Labs"
-    Environment     = "Homolog"
-    Terraform       = true
-    Department      = "Digital Architecture"
+    Resource                        = "Networking "
+    ResourceName                    = "lab-eks"
+    Environment                     = "Lab" 
+    Terraform                       = true
+    Owner                           = "Digital Architecture"
+
 }
