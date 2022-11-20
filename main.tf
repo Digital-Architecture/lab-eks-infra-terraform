@@ -28,38 +28,54 @@ module "ec2_bastion_host" {
         }
     ]
 
-    tags                    = var.tags
+    tags                = var.tags
 }
 
 
 ### AWS IAM ###
 
+module "role-bastionhost-ec2" {
+
+    source              = "git::https://github.com/Digital-Architecture/terraform-modules-aws-iam.git//roles"
+
+    name_role           = "role-bastionhost-${terraform.workspace}-ec2"
+    json_role           = file("./files/iam/role-ec2.json")
+}
+
+module "instance-profile-bastionhost" {
+
+    source                  = "git::https://github.com/Digital-Architecture/terraform-modules-aws-iam.git//iam_instance_profile"
+
+    name_instance_profile   = "instance-profile-${terraform.workspace}-bastionhost-ec2"
+    role_id                 = module.role-bastionhost-ec2.role-id
+
+}
 
 ### AWS Security Group ###
 module "sg_bastion_host" {
 
-    source = "git::https://github.com/Digital-Architecture/terraform-modules-aws-security-group.git"
+    source                  = "git::https://github.com/Digital-Architecture/terraform-modules-aws-security-group.git"
 
-    name_security_group = "scg-ec2-bastion-host-${terraform.workspace}"
-    vpc_id              = data.aws_vpc.vpc-lab-eks.id
-    tags                = var.tags
+    name_security_group     = "scg-ec2-bastion-host-${terraform.workspace}"
+    vpc_id                  = data.aws_vpc.vpc-lab-eks.id
+    tags                    = var.tags
 
     sg_rules = [
         {
-            type        = "ingress"
-            from_port   = 22
-            to_port     = 22
-            protocol    = "tcp"
-            cidr_blocks  = "0.0.0.0/0"
-            description = "Allow SSH"
+            type            = "ingress"
+            from_port       = 22
+            to_port         = 22
+            protocol        = "tcp"
+            cidr_blocks     = "0.0.0.0/0"
+            description     = "Allow SSH"
         },
         {
-            type        = "egress"
-            from_port   = 0
-            to_port     = 0
-            protocol    = "-1"
-            cidr_blocks  = "0.0.0.0/0"
-            description = "Allow Traffic Outbound"
+            type            = "egress"
+            from_port       = 0
+            to_port         = 0
+            protocol        = "-1"
+            cidr_blocks     = "0.0.0.0/0"
+            description     = "Allow Traffic Outbound"
         }
     ]
 }
