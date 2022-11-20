@@ -60,7 +60,7 @@ module "ec2_bastion_host" {
     ami                         = data.aws_ami.ubuntu.id
     instance_type               = "t3.small"
     monitoring                  = true
-    vpc_security_group_ids      = ["module.sg_bastion_host.security_group_id"]
+    vpc_security_group_ids      = [ module.sg_bastion_host.security_group_id ]
     subnet_id                   = data.aws_subnet.subnet-public-lab-1.id 
     associate_public_ip_address = true
 
