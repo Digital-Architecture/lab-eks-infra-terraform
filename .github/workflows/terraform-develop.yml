@@ -27,6 +27,7 @@ jobs:
         run: | 
           terraform init
           terraform workspace new ${{ env.stack }}
+          terraform workspace select ${{ env.stack }}
         continue-on-error: true
 
       - name: Terraform Validate
