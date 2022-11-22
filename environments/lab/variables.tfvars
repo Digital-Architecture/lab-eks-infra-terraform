@@ -2,6 +2,8 @@
 # Create: Marcos Cianci 
 
 
+environment = "lab"
+
 tags = {
     Resource                        = "Networking "
     ResourceName                    = "lab-eks"

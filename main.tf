@@ -7,7 +7,7 @@ module "role-bastionhost-ec2" {
 
     source              = "git::https://github.com/Digital-Architecture/terraform-modules-aws-iam.git//roles"
 
-    name_role           = "role-bastionhost-${terraform.workspace}-ec2"
+    name_role           = "role-bastionhost-${var.environment}-ec2"
     json_role           = file("./files/iam/role-ec2.json")
 }
 
@@ -15,7 +15,7 @@ module "instance-profile-bastionhost" {
 
     source                  = "git::https://github.com/Digital-Architecture/terraform-modules-aws-iam.git//iam_instance_profile"
 
-    name_instance_profile   = "instance-profile-${terraform.workspace}-bastionhost-ec2"
+    name_instance_profile   = "instance-profile-${var.environment}-bastionhost-ec2"
     role_id                 = module.role-bastionhost-ec2.role-id
 
 }
@@ -25,7 +25,7 @@ module "sg_bastion_host" {
 
     source                  = "git::https://github.com/Digital-Architecture/terraform-modules-aws-security-group.git"
 
-    name_security_group     = "scg-ec2-bastion-host-${terraform.workspace}"
+    name_security_group     = "scg-ec2-bastion-host-${var.environment}"
     vpc_id                  = data.aws_vpc.vpc-lab-eks.id
     tags                    = var.tags
 
@@ -55,12 +55,12 @@ module "ec2_bastion_host" {
 
     source                      = "git::https://github.com/Digital-Architecture/terraform-modules-aws-ec2.git"
 
-    ec2_name                    = "bastion-host-eks-${terraform.workspace}"
+    ec2_name                    = "bastion-host-eks-${var.environment}"
     iam_instance_profile        = ""
     ami                         = data.aws_ami.ubuntu.id
     instance_type               = "t3.small"
     monitoring                  = true
-    vpc_security_group_ids      = ["module.sg_bastion_host.security_group_id"]
+    security_groups             = [ module.sg_bastion_host.security_group_id ]
     subnet_id                   = data.aws_subnet.subnet-public-lab-1.id 
     associate_public_ip_address = true
 
