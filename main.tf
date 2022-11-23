@@ -118,9 +118,7 @@ module "eks-lab" {
         echo 'foo bar'
         EOT
 
-        vpc_security_group_ids = [
-          module.sg_eks_node_group_one
-        ]
+        vpc_security_group_ids = [ module.sg_eks_node_group_one.security_group_id ]
       }
 
       two = {
@@ -136,9 +134,7 @@ module "eks-lab" {
         echo 'foo bar'
         EOT
 
-        vpc_security_group_ids = [
-          module.sg_eks_node_group_two
-        ]
+        vpc_security_group_ids = [ module.sg_eks_node_group_two.security_group_id ]
       }
 }
 
