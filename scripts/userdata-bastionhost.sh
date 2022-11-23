@@ -4,7 +4,6 @@
 
 ### Variables ###
 PYTHONIOENCODING="UTF-8"
-TERRAFORM_VERSION="0.14.10"
 KUBECTL_VERSION="1.18.0"
 AWS_IAM_AUTHENTICATOR_VERSION="1.15.10"
 HELM_VERSION="3.2.0"
@@ -25,12 +24,6 @@ cd apps
 curl --silent -LO https://storage.googleapis.com/kubernetes-release/release/v1.16.15/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
-
-### Terraform ###
-curl --silent https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip --output terraform.zip
-unzip terraform.zip 
-mv terraform /usr/local/bin/
-rm terraform.zip
 
 ### Helm ###
 curl --silent https://get.helm.sh/helm-v$HELM_VERSION-linux-amd64.tar.gz --output helm-linux-amd64.tar.gz
