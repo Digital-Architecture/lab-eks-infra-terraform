@@ -105,22 +105,7 @@ module "eks-lab" {
     }
 
     eks_managed_node_groups = {
-      one = {
-        name = "node-group-1"
-
-        instance_types = ["t3.small"]
-
-        min_size     = 1
-        max_size     = 3
-        desired_size = 2
-
-        pre_bootstrap_user_data = <<-EOT
-        echo 'foo bar'
-        EOT
-
-        vpc_security_group_ids = [ module.sg_eks_node_group_one.security_group_id ]
-      }
-
+      
       two = {
         name = "node-group-2"
 
