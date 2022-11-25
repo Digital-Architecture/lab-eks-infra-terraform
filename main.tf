@@ -83,6 +83,117 @@ module "ec2_bastion_host" {
 }
 
 
+## AWS EKS ###
+module "eks-lab" {
+
+    source                          = "terraform-aws-modules/eks/aws"
+    version                         = "18.26.6"
+    
+    cluster_name                    = local.cluster_name
+    cluster_version                 = "1.22"
+
+    vpc_id                          = data.aws_vpc.vpc-lab-eks.id
+    subnet_ids                     = [data.aws_subnet.subnet-private-lab-1.id, data.aws_subnet.subnet-private-lab-2.id ,data.aws_subnet.subnet-public-lab-1.id, data.aws_subnet.subnet-public-lab-2.id]
+
+    eks_managed_node_group_defaults = {
+        ami_type = "AL2_x86_64"
+
+        attach_cluster_primary_security_group = true
+
+        # Disabling and using externally provided security groups
+        create_security_group = false
+    }
+
+    eks_managed_node_groups = {
+      one = {
+        name = "node-group-1"
+
+        instance_types = ["t3.small"]
+
+        min_size     = 1
+        max_size     = 3
+        desired_size = 2
+
+        pre_bootstrap_user_data = <<-EOT
+        echo 'foo bar'
+        EOT
+
+        vpc_security_group_ids = [ module.sg_eks_node_group_one.security_group_id ]
+      }
+
+      two = {
+        name = "node-group-2"
+
+        instance_types = ["t3.medium"]
+
+        min_size     = 1
+        max_size     = 2
+        desired_size = 1
+
+        pre_bootstrap_user_data = <<-EOT
+        echo 'foo bar'
+        EOT
+
+        vpc_security_group_ids = [ module.sg_eks_node_group_two.security_group_id ]
+      }
+}
+
+}
 
 
+module "sg_eks_node_group_one" {
 
+    source                  = "git::https://github.com/Digital-Architecture/terraform-modules-aws-security-group.git"
+
+    name_security_group     = "scg-eks-node-group-one-${var.environment}"
+    vpc_id                  = data.aws_vpc.vpc-lab-eks.id
+    tags                    = var.tags
+
+    sg_rules = [
+        {
+            type            = "ingress"
+            from_port       = 22
+            to_port         = 22
+            protocol        = "tcp"
+            cidr_blocks     = "0.0.0.0/0"
+            description     = "Allow SSH"
+        },
+        {
+            type            = "egress"
+            from_port       = 0
+            to_port         = 0
+            protocol        = "-1"
+            cidr_blocks     = "0.0.0.0/0"
+            description     = "Allow Traffic Outbound"
+        }
+    ]
+}
+
+
+module "sg_eks_node_group_two" {
+
+    source                  = "git::https://github.com/Digital-Architecture/terraform-modules-aws-security-group.git"
+
+    name_security_group     = "scg-eks-node-group-two-${var.environment}"
+    vpc_id                  = data.aws_vpc.vpc-lab-eks.id
+    tags                    = var.tags
+
+    sg_rules = [
+        {
+            type            = "ingress"
+            from_port       = 22
+            to_port         = 22
+            protocol        = "tcp"
+            cidr_blocks     = "0.0.0.0/0"
+            description     = "Allow SSH"
+        },
+        {
+            type            = "egress"
+            from_port       = 0
+            to_port         = 0
+            protocol        = "-1"
+            cidr_blocks     = "0.0.0.0/0"
+            description     = "Allow Traffic Outbound"
+        }
+    ]
+}

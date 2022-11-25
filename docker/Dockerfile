@@ -1,11 +1,12 @@
 FROM debian:buster-slim
 
 ENV PYTHONIOENCODING UTF-8
-ENV TERRAFORM_VERSION 0.14.6
+ENV TERRAFORM_VERSION 0.14.10
 ENV KUBECTL_VERSION 1.18.0
 ENV AWS_IAM_AUTHENTICATOR_VERSION 1.15.10
 ENV HELM_VERSION=3.2.0
 ENV HELM_SSM_PLUGIN=2.0.3
+
 
 RUN apt-get -y -qq update && \
         apt-get install -y -qq curl unzip make wget vim watch packer ansible python
@@ -64,7 +65,7 @@ RUN useradd -ms /bin/bash appuser
 
 #RUN chown -R appuser:appuser /home/appuser/.kube
 
-USER appuser
+#USER appuser
 
 RUN mkdir ~/.aws/ && cd ~/.aws && touch config && touch credentials
 

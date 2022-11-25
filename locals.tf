@@ -3,6 +3,8 @@
 
 locals {
 
+    cluster_name = "eks-lab"
+
     use_localstack = (terraform.workspace == "local")
     region = var.region
 
@@ -35,3 +37,8 @@ locals {
         }
     )
 }
+
+#resource "randon_string" "suffix" {
+#    length = 8
+#    special = false
+#}
